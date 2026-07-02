@@ -1,0 +1,82 @@
+From de3ba2b0429509aef650c3879360c05b0136e598 Mon Sep 17 00:00:00 2001
+From: Warwick Brown <me@moonman.me.uk>
+Date: Thu, 2 Jul 2026 19:00:52 +0100
+Subject: [PATCH 2/2] phase 6-a: fix nroff/troff n7.c storeword LP64 SIGSEGV
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Root cause: storeword's growth path did
+
+    j     = (char *)k - (char *)word;
+    wordp = (tchar *)((char *)wordp + j);
+
+to rebase wordp and hyp[] entries into the newly realloc'd word buffer.
+On the very first entry both 'word' and 'wordp' are NULL, so j equals
+the integer value of the fresh allocation address and 'wordp = NULL + j'
+= a garbage pointer that then dereferences at s1's *wordp++ = c.
+
+On ILP32 (Solaris SPARC, i386) the arithmetic often landed inside the
+process' address space and appeared to work — the store touched some
+unrelated heap byte and the next realloc happened to relocate before
+anything else read it. On LP64 (Darwin arm64) the poisoned pointer sits
+outside any mapping and the kernel delivers EXC_BAD_ACCESS immediately,
+crashing on every non-empty input.
+
+Fix: on the first-allocation path where word == NULL, position wordp at
+the start of the fresh buffer. On subsequent growth, keep the original
+rebase arithmetic. hyp[] entries only exist after non-null 'word', so
+they don't need special-casing.
+
+Verified: nroff -man and troff both process input cleanly. Manual
+pages format correctly. Installed binaries updated.
+Closes task #14.
+---
+ troff/n7.c | 31 ++++++++++++++++++++++++++-----
+ 1 file changed, 26 insertions(+), 5 deletions(-)
+
+diff --git a/troff/n7.c b/troff/n7.c
+index 28fa5e1..6309926 100644
+--- a/troff/n7.c
++++ b/troff/n7.c
+@@ -1461,11 +1461,32 @@ storeword(register tchar c, register int w)
+ 			wdsize = owdsize;
+ 			goto s1;
+ 		}
+-		j = (char *)k - (char *)word;
+-		wordp = (tchar *)((char *)wordp + j);
+-		for (h = hyptr; h < hyp; h++)
+-			if (*h)
+-				*h = (tchar *)((char *)*h + j);
++		/*
++		 * LP64 fix: original code computed
++		 *     j = k - word
++		 *     wordp = (char*)wordp + j
++		 * to rebase wordp/hyp entries into the new buffer. On first
++		 * entry both `word' and `wordp' are NULL, so j is a huge
++		 * offset (address of k as an integer) and NULL + j = garbage
++		 * pointer that gets dereferenced at s1's *wordp++ = c. On
++		 * ILP32 this happened to land in the process' address space
++		 * often enough to appear to work; LP64 traps it as EXC_BAD_
++		 * ACCESS immediately.
++		 *
++		 * Correct behaviour: on the very first allocation (word ==
++		 * NULL), position wordp at the start of the freshly-realloc'd
++		 * buffer. On subsequent growth, apply the rebase offset as
++		 * before. -- Heirloom Darwin port.
++		 */
++		if (word == NULL) {
++			wordp = k;
++		} else {
++			j = (char *)k - (char *)word;
++			wordp = (tchar *)((char *)wordp + j);
++			for (h = hyptr; h < hyp; h++)
++				if (*h)
++					*h = (tchar *)((char *)*h + j);
++		}
+ 		word = k;
+ 		wdpenal = pp;
+ 		memset(&wdpenal[owdsize], 0,
+-- 
+2.50.1 (Apple Git-155)
+

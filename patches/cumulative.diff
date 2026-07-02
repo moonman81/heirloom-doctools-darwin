@@ -1,0 +1,105 @@
+diff --git a/mk.config b/mk.config
+index 4fd7b20..7f7fb77 100644
+--- a/mk.config
++++ b/mk.config
+@@ -1,27 +1,27 @@
+ #
+ # A BSD-compatible install command.
+ #
+-INSTALL=/usr/ucb/install
++INSTALL=/usr/bin/install
+ 
+ #
+ # Packaging prefix.
+ #
+-PREFIX=/usr
++PREFIX=/opt/heirloom
+ 
+ #
+ # Where to place binaries.
+ #
+-BINDIR=$(PREFIX)/ucb
++BINDIR=$(PREFIX)/bin
+ 
+ #
+ # Where to place libraries.
+ #
+-LIBDIR=$(PREFIX)/ucblib
++LIBDIR=$(PREFIX)/lib
+ 
+ #
+ # Where to place ASCII charts and the like.
+ #
+-PUBDIR=$(PREFIX)/pub
++PUBDIR=$(PREFIX)/share/pub
+ 
+ #
+ # Where to place manual pages.
+@@ -83,7 +83,7 @@ CCC=c++
+ #
+ # Compiler flags.
+ #
+-CFLAGS=-O
++CFLAGS=-O -g
+ 
+ #
+ # C preprocessor flags.
+@@ -91,7 +91,7 @@ CFLAGS=-O
+ # Use -D_GNU_SOURCE for Linux with GNU libc.
+ # Use -D_INCLUDE__STDC_A1_SOURCE for HP-UX.
+ #
+-CPPFLAGS=-D_GNU_SOURCE
++CPPFLAGS=-D_DARWIN_C_SOURCE
+ 
+ #
+ # Warning flags for the compiler.
+@@ -117,5 +117,5 @@ SHELL=/bin/sh
+ # Run ranlib if it is in the current path. This should take care
+ # of most situations. On Mac OS X, you need to uncomment "ranlib -c".
+ #
+-RANLIB=(hash ranlib) >/dev/null 2>&1 || exit 0; ranlib
+-#RANLIB=ranlib -c
++#RANLIB=(hash ranlib) >/dev/null 2>&1 || exit 0; ranlib
++RANLIB=ranlib -c
+diff --git a/troff/n7.c b/troff/n7.c
+index 28fa5e1..6309926 100644
+--- a/troff/n7.c
++++ b/troff/n7.c
+@@ -1461,11 +1461,32 @@ storeword(register tchar c, register int w)
+ 			wdsize = owdsize;
+ 			goto s1;
+ 		}
+-		j = (char *)k - (char *)word;
+-		wordp = (tchar *)((char *)wordp + j);
+-		for (h = hyptr; h < hyp; h++)
+-			if (*h)
+-				*h = (tchar *)((char *)*h + j);
++		/*
++		 * LP64 fix: original code computed
++		 *     j = k - word
++		 *     wordp = (char*)wordp + j
++		 * to rebase wordp/hyp entries into the new buffer. On first
++		 * entry both `word' and `wordp' are NULL, so j is a huge
++		 * offset (address of k as an integer) and NULL + j = garbage
++		 * pointer that gets dereferenced at s1's *wordp++ = c. On
++		 * ILP32 this happened to land in the process' address space
++		 * often enough to appear to work; LP64 traps it as EXC_BAD_
++		 * ACCESS immediately.
++		 *
++		 * Correct behaviour: on the very first allocation (word ==
++		 * NULL), position wordp at the start of the freshly-realloc'd
++		 * buffer. On subsequent growth, apply the rebase offset as
++		 * before. -- Heirloom Darwin port.
++		 */
++		if (word == NULL) {
++			wordp = k;
++		} else {
++			j = (char *)k - (char *)word;
++			wordp = (tchar *)((char *)wordp + j);
++			for (h = hyptr; h < hyp; h++)
++				if (*h)
++					*h = (tchar *)((char *)*h + j);
++		}
+ 		word = k;
+ 		wdpenal = pp;
+ 		memset(&wdpenal[owdsize], 0,
