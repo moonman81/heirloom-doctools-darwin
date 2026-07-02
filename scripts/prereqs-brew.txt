@@ -1,0 +1,2 @@
+# Homebrew formulae required to build heirloom-doctools.
+# Baseline is Xcode CLT — nothing extra required.

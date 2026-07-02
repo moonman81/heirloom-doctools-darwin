@@ -1,0 +1,3 @@
+# Companion Heirloom packages required BEFORE doctools.
+sh:/opt/heirloom/bin/sh
+devtools-yacc:/opt/heirloom/ccs/bin/yacc
