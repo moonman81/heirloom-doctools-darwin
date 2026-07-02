@@ -1461,11 +1461,32 @@ storeword(register tchar c, register int w)
 			wdsize = owdsize;
 			goto s1;
 		}
-		j = (char *)k - (char *)word;
-		wordp = (tchar *)((char *)wordp + j);
-		for (h = hyptr; h < hyp; h++)
-			if (*h)
-				*h = (tchar *)((char *)*h + j);
+		/*
+		 * LP64 fix: original code computed
+		 *     j = k - word
+		 *     wordp = (char*)wordp + j
+		 * to rebase wordp/hyp entries into the new buffer. On first
+		 * entry both `word' and `wordp' are NULL, so j is a huge
+		 * offset (address of k as an integer) and NULL + j = garbage
+		 * pointer that gets dereferenced at s1's *wordp++ = c. On
+		 * ILP32 this happened to land in the process' address space
+		 * often enough to appear to work; LP64 traps it as EXC_BAD_
+		 * ACCESS immediately.
+		 *
+		 * Correct behaviour: on the very first allocation (word ==
+		 * NULL), position wordp at the start of the freshly-realloc'd
+		 * buffer. On subsequent growth, apply the rebase offset as
+		 * before. -- Heirloom Darwin port.
+		 */
+		if (word == NULL) {
+			wordp = k;
+		} else {
+			j = (char *)k - (char *)word;
+			wordp = (tchar *)((char *)wordp + j);
+			for (h = hyptr; h < hyp; h++)
+				if (*h)
+					*h = (tchar *)((char *)*h + j);
+		}
 		word = k;
 		wdpenal = pp;
 		memset(&wdpenal[owdsize], 0,
