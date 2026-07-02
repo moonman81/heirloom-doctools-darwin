@@ -1,0 +1,7 @@
+.EQ
+lpile {
+x = f(y/2) + y/2
+above
+x ~ = ~ f(y/2) ~ + ~ y ~ / ~ 2
+}
+.EN
