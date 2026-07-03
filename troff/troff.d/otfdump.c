@@ -44,6 +44,7 @@ static void	print(enum show, const char *, ...);
 #include "dpost.d/getopt.c"
 
 #include <libgen.h>
+#include "heirloom_flags.h"
 
 static const char	*progname;
 struct dev	dev;
@@ -139,6 +140,7 @@ dump(const char *name)
 int
 main(int argc, char **argv)
 {
+	heirloom_flags(argc, argv, "troff.d", 0);
 	int	i, e = 0;
 
 	progname = basename(argv[0]);

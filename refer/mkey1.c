@@ -25,6 +25,7 @@
 #include <locale.h>
 #include <stdlib.h>
 #include "refer..c"
+#include "heirloom_flags.h"
 
 extern char *comname;	/* "/usr/lib/refer/eign" */
 int wholefile = 0;
@@ -37,6 +38,7 @@ char *iglist = "XYZ#";
 int
 main (int argc,char **argv)
 {
+	heirloom_flags(argc, argv, "refer", HF_VERBOSE_TAKEN);
 	/* this program expects as its arguments a list of
 	 * files and generates a set of lines of the form
 	 *	filename:byte-add,length (tab) key1 key2 key3
@@ -57,20 +59,20 @@ main (int argc,char **argv)
 		{
 		case 'c':
 			comname = argv[2];
-			argv++; 
+			argv++;
 			argc--;
 			break;
 		case 'w':
-			wholefile = 1;  
+			wholefile = 1;
 			break;
 		case 'f':
 			inlist = argv[2];
-			argv++; 
+			argv++;
 			argc--;
 			break;
 		case 'i':
 			iglist = argv[2];
-			argv++; 
+			argv++;
 			argc--;
 			break;
 		case 'l':
@@ -87,7 +89,7 @@ main (int argc,char **argv)
 			labels = 0;
 			break;
 		}
-		argc--; 
+		argc--;
 		argv++;
 	}
 	if (inlist)

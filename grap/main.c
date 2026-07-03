@@ -18,6 +18,7 @@
 #include <unistd.h>
 #include "grap.h"
 #include "y.tab.h"
+#include "heirloom_flags.h"
 
 int	dbg	= 0;
 
@@ -48,6 +49,7 @@ extern void getdata(void);
 int
 main(int argc, char *argv[])
 {
+	heirloom_flags(argc, argv, "grap", HF_VERBOSE_TAKEN);
 	extern void onintr(int), fpecatch(int);
 
 	if (signal(SIGINT, SIG_IGN) != SIG_IGN)

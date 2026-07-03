@@ -30,6 +30,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+#include "heirloom_flags.h"
 #define MAXENT 50
 
 static struct skeleton {
@@ -69,6 +70,7 @@ usage(void)			/* print proper usage and exit */
 int
 main(int argc, char **argv)	/* addbib: bibliography entry program */
 {
+	heirloom_flags(argc, argv, "addbib", HF_VERBOSE_TAKEN);
 	FILE *fp;
 	int i;
 
@@ -300,7 +302,7 @@ rd_skel(char *arg)		/* redo bibskel from user-supplied file */
 			fprintf(stderr, "Format: prompt-string <TAB> %%key\n");
 			exit(1);
 		}
-		for (i++, j = 0; str[i] != '\n'; i++, j++) 
+		for (i++, j = 0; str[i] != '\n'; i++, j++)
 			bibskel[entry].keylet[j] = str[i];
 		bibskel[entry].keylet[j] = 0;
 

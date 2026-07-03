@@ -96,6 +96,7 @@
 #include	<string.h>
 #include	<fcntl.h>
 #include	"dev.h"
+#include "heirloom_flags.h"
 
 #define	BYTEMASK	0377
 
@@ -147,6 +148,7 @@ void add_font(char *name);
 int
 main(int argc, char *argv[])
 {
+	heirloom_flags(argc, argv, "devaps", 0);
 	FILE *fin;
 	char cmd[100], *p;
 	int i, totfont, v;

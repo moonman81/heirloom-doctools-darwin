@@ -198,7 +198,7 @@
  * The procedures are used by the routines in file draw.c, and are copied to the
  * prologue.
  *
- * Many default values, like the magnification and orientation, are defined in 
+ * Many default values, like the magnification and orientation, are defined in
  * the prologue, which is where they belong. If they're changed (by options), an
  * appropriate definition is made after the prologue is added to the output file.
  * The -P option passes arbitrary PostScript through to the output file. Among
@@ -208,7 +208,7 @@
  *
  * output language from troff:
  * all numbers are character strings
- * 
+ *
  * sn	size in points
  * fn	font as number from 1-n
  * cx	ascii character x
@@ -242,7 +242,7 @@
  * 	x f n s	font position n contains font s
  * 	x H n	set character height to n
  * 	x S n	set slant to N
- * 
+ *
  * 	Subcommands like "i" are often spelled out like "init".
  *
  *
@@ -261,6 +261,7 @@
 #include	<stdio.h>
 #include	<fcntl.h>
 #include	<stdlib.h>
+#include "heirloom_flags.h"
 #include	<string.h>
 #include	<unistd.h>
 #include	<signal.h>
@@ -683,11 +684,12 @@ static int	mb_cur_max;
 /*****************************************************************************/
 
 
-int 
+int
 main(int agc, char *agv[])
 
 
 {
+	heirloom_flags(agc, agv, "dpost", HF_VERBOSE_TAKEN);
     const char	template[] = "/var/tmp/dpostXXXXXX";
     char	*tp;
     FILE	*fp;
@@ -1836,7 +1838,7 @@ fontinit(void)
  * font position, just to be sure device emulation works reasonably well - there's
  * no guarantee *devname's special fonts match what's needed when *realdev's tables
  * are used.
- * 
+ *
  */
 
 
@@ -1988,7 +1990,7 @@ have:   fontbase[n] = &a->Font;
 	snprintf(temp, sizeof temp, "%s/dev%s/%s", fontdir, devname, s);
     else snprintf(temp, sizeof temp, "%s/%s", s1, s);
 
-    if ( access(temp, R_OK) < 0 ) 
+    if ( access(temp, R_OK) < 0 )
         snprintf(temp, sizeof temp, "%s/dev%s/%s",
 	    fontdir, devname, mapfont(s));
     if ((fpout = readfont(temp, &dev, 0)) == NULL)
@@ -2303,7 +2305,7 @@ resetpos(void)
  * done something that may have wiped it out, and we want to force dpost to set
  * the printer's position before printing text or whatever. For example stroke or
  * fill implicitly do a newpath, and that wipes out the current point, unless the
- * calls were bracketed by a gsave/grestore pair. 
+ * calls were bracketed by a gsave/grestore pair.
  *
  */
 
@@ -2748,7 +2750,7 @@ t_page (
  * restore so it can be easily redefined to have side-effects in the printer's VM.
  * Although it seems reasonable I haven't implemented it, because it makes other
  * things, like selectively setting manual feed or choosing an alternate paper
- * tray, clumsy - at least on a per page basis. 
+ * tray, clumsy - at least on a per page basis.
  *
  */
 
@@ -2808,7 +2810,7 @@ t_newline(void)
 /*****************************************************************************/
 
 
-int 
+int
 t_size (
     int n			/* convert this to an internal size */
 )
@@ -2912,7 +2914,7 @@ t_fp (
 /*****************************************************************************/
 
 
-int 
+int
 t_font (
     char *s			/* use font in this position next */
 )
@@ -3550,7 +3552,7 @@ put1s (
  */
 
 
-    if (s[0] == 'P' && s[1] == 'S' && s[2] != 0) {	/* PostScript name */ 
+    if (s[0] == 'P' && s[1] == 'S' && s[2] != 0) {	/* PostScript name */
          int	m;
 	 struct namecache	*np;
 	 struct afmtab	*a;
@@ -4270,7 +4272,7 @@ charlib (
 /*****************************************************************************/
 
 
-int 
+int
 doglobal (
     char *name			/* copy this to the output - globally */
 )

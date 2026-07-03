@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "refer..c"
+#include "heirloom_flags.h"
 
 static void signals(void);
 static void intr(int);
@@ -34,6 +35,7 @@ static void cleanup(void);
 int
 main(int argc,char **argv)		/* process command-line arguments */
 {
+	heirloom_flags(argc, argv, "refer1", HF_VERBOSE_TAKEN);
 	char line[BUFSIZ], *s;
 	int nodeflt = 0;
 
@@ -44,7 +46,7 @@ main(int argc,char **argv)		/* process command-line arguments */
 	while (argc > 1 && argv[1][0] == '-') {
 		switch(argv[1][1]) {
 		case 'e':
-			endpush++; 
+			endpush++;
 			break;
 		case 's':
 			sort++;
@@ -52,7 +54,7 @@ main(int argc,char **argv)		/* process command-line arguments */
 			if (argv[1][2])
 				keystr = argv[1]+2;
 			break;
-		case 'l': 
+		case 'l':
 			labels++;
 			s = argv[1]+2;
 			nmlen = atoi(s);
@@ -69,7 +71,7 @@ main(int argc,char **argv)		/* process command-line arguments */
 			nodeflt = 1;
 			break;
 		case 'p':
-			argc--; 
+			argc--;
 			argv++;
 			*search++ = argv[1];
 			if (search-rdata > NSERCH)
@@ -103,7 +105,7 @@ main(int argc,char **argv)		/* process command-line arguments */
 			postpunct++;
 			break;
 		}
-		argc--; 
+		argc--;
 		argv++;
 	}
 	if (getenv("REFER") != NULL)
@@ -126,14 +128,14 @@ main(int argc,char **argv)		/* process command-line arguments */
 			fprintf(stderr, "Can't open scratch file");
 		}
 		sep = 002; /* separate records without confusing sort..*/
-	} else 
+	} else
 		fo = ftemp;
 	do {
 		if (argc > 1) {
 			fclose(in);
 			Iline = 0;
 			in = fopen(Ifile = argv[1], "r");
-			argc--; 
+			argc--;
 			argv++;
 			if (in == NULL) {
 				err("Can't read %s", Ifile);

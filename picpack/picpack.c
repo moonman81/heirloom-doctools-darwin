@@ -131,11 +131,14 @@ char	 *fgetline(char **line, size_t *linesize, size_t *llen, FILE *fp);
 /*****************************************************************************/
 
 
+#include "heirloom_flags.h"
+
 int
 main(int agc, char **agv)
 
 
 {
+	heirloom_flags(agc, agv, "picpack", 0);
 
 
 /*

@@ -7,12 +7,12 @@
  * All rights reserved. The Berkeley software License Agreement
  * specifies the terms and conditions for redistribution.
  */
-     
+
 /*
  * Copyright (c) 1983, 1984 1985, 1986, 1987, 1988, Sun Microsystems, Inc.
  * All Rights Reserved.
  */
-  
+
 /*	from OpenSolaris "t1.c	1.9	05/06/02 SMI"	 SVr4.0 1.1		*/
 
 /*
@@ -27,6 +27,7 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <libgen.h>
+#include "heirloom_flags.h"
 # ifdef gcos
 /* required by GCOS because file is passed to "tbl" by troff preprocessor */
 # define _f1 _f
@@ -48,9 +49,10 @@ extern FILE *_f[];
 
 # define ever (;;)
 
-int 
+int
 main(int argc, char *argv[])
 {
+	heirloom_flags(argc, argv, "tbl", HF_VERBOSE_TAKEN);
 # ifndef gcos
 void badsig(int);
 # endif
@@ -65,7 +67,7 @@ exit(tbl(argc,argv));
 }
 
 
-int 
+int
 tbl(int argc, char *argv[])
 {
 char *line = NULL;
@@ -85,7 +87,7 @@ return(0);
 }
 int sargc;
 char **sargv;
-void 
+void
 setinp(int argc, char **argv)
 {
 	sargc = argc;
@@ -94,7 +96,7 @@ setinp(int argc, char **argv)
 	if (sargc>0)
 		swapin();
 }
-int 
+int
 swapin(void)
 {
 	while (sargc>0 && **sargv=='-') /* Mem fault if no test on sargc */
@@ -147,7 +149,7 @@ swapin(void)
 	return(1);
 }
 # ifndef gcos
-void 
+void
 badsig(int unused)
 {
 signal(SIGPIPE, SIG_IGN);

@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include "heirloom_flags.h"
 
 #define	BUF BUFSIZ
 #define	MXFILES 16
@@ -49,6 +50,7 @@ static int endcomma(char *);
 int
 main(int argc, char **argv)	/* sortbib: sort bibliographic database in place */
 {
+	heirloom_flags(argc, argv, "sortbib", HF_VERBOSE_TAKEN);
 	FILE *fp[MXFILES], *tfp;
 	int i;
 

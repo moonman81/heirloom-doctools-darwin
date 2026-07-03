@@ -7,12 +7,12 @@
  * All rights reserved. The Berkeley software License Agreement
  * specifies the terms and conditions for redistribution.
  */
-     
+
 /*
  * Copyright (c) 1983, 1984 1985, 1986, 1987, 1988, Sun Microsystems, Inc.
  * All Rights Reserved.
  */
-  
+
 /*	from OpenSolaris "soelim.c	1.3	05/06/02 SMI"	 SVr4.0 1.1		*/
 
 /*
@@ -30,6 +30,7 @@ static const char sccsid[] USED = "@(#)/usr/ucb/soelim.sl	5.1 (gritter) 10/25/05
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "heirloom_flags.h"
 /*
  * soelim - a filter to process n/troff input eliminating .so's
  *
@@ -53,6 +54,7 @@ int process(char *);
 int
 main(int argc, char **argv)
 {
+	heirloom_flags(argc, argv, "soelim", HF_VERBOSE_TAKEN);
 
 	argc--;
 	argv++;

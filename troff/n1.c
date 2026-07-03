@@ -83,6 +83,7 @@ char *xxxvers = "@(#)roff:n1.c	2.13";
 #include "tw.h"
 #endif
 #include "pt.h"
+#include "heirloom_flags.h"
 
 #define	MAX_RECURSION_DEPTH	512
 static int	max_recursion_depth = MAX_RECURSION_DEPTH;
@@ -125,6 +126,7 @@ static int	_xflag;
 int
 main(int argc, char **argv)
 {
+	heirloom_flags(argc, argv, "troff", HF_VERBOSE_TAKEN);
 	register char	*p;
 	register int j;
 	char	**oargv;
@@ -222,9 +224,9 @@ main(int argc, char **argv)
 					argv[0][1] == 'd' ? "ds" : "nr",
 					argv[0][2],
 					argv[0][1] == 'd' ? "\"" : "",
-					&argv[0][3]); 
+					&argv[0][3]);
 			}
-			} else 
+			} else
 				errprint("wrong options");
 			continue;
 		case 'c':
@@ -249,7 +251,7 @@ main(int argc, char **argv)
 			  else {
 				errprint("Cannot find library %s\n", argv[0]);
 				done(02);
-			  } 
+			  }
 			continue;
 		case 'o':
 			getpn(&argv[0][2]);
@@ -394,7 +396,7 @@ tryfile(register char *pat, register char *fn, int idx)
 	if (access(mfiles[idx], 4) == -1)
 		return(0);
 	else return(1);
-}	
+}
 
 void catch(int unused)
 {
@@ -438,7 +440,7 @@ init2(void)
 	ttyod = 2;
 	if ((ttyp=ttyname(j=0)) != 0 || (ttyp=ttyname(j=1)) != 0 || (ttyp=ttyname(j=2)) != 0)
 		;
-	else 
+	else
 		ttyp = "notty";
 	iflg = j;
 	if (ascii)
@@ -1036,12 +1038,12 @@ g0:
 			return(k);
 		}
 		if (k == FLSS) {
-			copyf++; 
+			copyf++;
 			raw++;
 			i = getch0();
 			if (!fi)
 				flss = i;
-			copyf--; 
+			copyf--;
 			raw--;
 			goto g0;
 		}
@@ -1056,7 +1058,7 @@ g0:
 			}
 			if (k == fc || k == tabch || k == ldrch) {
 				if ((i = setfield(k)) == 0)
-					goto g0; 
+					goto g0;
 				else
 					return(i);
 			}

@@ -7,7 +7,7 @@
  * All rights reserved. The Berkeley software License Agreement
  * specifies the terms and conditions for redistribution.
  */
-     
+
 /*
  * Copyright (c) 1983-1988, 2001 by Sun Microsystems, Inc.
  * All rights reserved.
@@ -25,6 +25,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <libgen.h>
+#include "heirloom_flags.h"
 
 char	*in;	/* input buffer */
 size_t	insize;	/* input buffer size */
@@ -32,6 +33,7 @@ int noeqn;
 
 int
 main(int argc,char **argv) {
+	heirloom_flags(argc, argv, "eqn", HF_VERBOSE_TAKEN);
 
 	progname = basename(argv[0]);
 	eqnexit(eqn(argc, argv));
@@ -267,7 +269,7 @@ setfile(int argc, char **argv) {
 		case 'f': gfont = svargv[1][2]; break;
 		case 'e': noeqn++; break;
 		case 'r': /*resolution = atoi(&svargv[1][2]);*/ break;
-		case 0:	goto endargs; 
+		case 0:	goto endargs;
 		default: dbg = 1;
 		}
 		svargc--;

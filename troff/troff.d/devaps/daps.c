@@ -150,6 +150,7 @@ char *xxxvers = "troff.d/devaps/daps.c	1.2";
 
 #include	"daps.h"				/* constant and macro definitions */
 #include	"daps.g"				/* global variable definitions */
+#include "heirloom_flags.h"
 
 
 
@@ -158,11 +159,12 @@ char *xxxvers = "troff.d/devaps/daps.c	1.2";
 /*****************************************************************************/
 
 
-int 
+int
 main (int argc, char *argv[])
 
 
 {
+	heirloom_flags(argc, argv, "devaps", 0);
 
 
 	/********************************************************************
@@ -451,7 +453,7 @@ process_input (int argc, char *argv[])
 
 			if ( strcmp(*++argv, "-") == 0 )	/* use standard input */
 				fp_in = stdin;
-			else if ( (fp_in = fopen(*argv, "r")) == NULL )  {		
+			else if ( (fp_in = fopen(*argv, "r")) == NULL )  {
 					error(FATAL, "can't open input file %s", *argv);
 					continue;			/* in case we ignore this error */
 			}	/* End else */
@@ -864,7 +866,7 @@ error (
 /*****************************************************************************/
 
 
-int 
+int
 done (void)
 
 
@@ -895,7 +897,7 @@ done (void)
 /*****************************************************************************/
 
 
-void 
+void
 float_err (
     int sig						/* signal number - not used */
 )
@@ -923,7 +925,7 @@ float_err (
 /*****************************************************************************/
 
 
-void 
+void
 wrap_up (
     int sig						/* signal number - not used */
 )
@@ -1089,7 +1091,7 @@ conv(
 						SKIP_LINE(fp,c);	/* MACRO - skip rest of this line */
 						if ( ch == 'n' )
 							t_newline();
-						line_number++;		
+						line_number++;
 						break;
 
 			default:						/* illegal command - quit */
@@ -1244,7 +1246,7 @@ devcntrl(
 					ungetc('\n', fp);		/* put '\n' back for SKIP_LINE */
 					file[0] = 0;			/* in case there is no file name */
 					SCAN_STR(buf, file);	/* MACRO - may have a file name */
-					loadfont(n, str, file);	
+					loadfont(n, str, file);
 					break;
 
 		case 'H':							/* set character height */
@@ -1387,7 +1389,7 @@ t_banner (void)
 	t_text(cut_marks);					/* print first set of cut marks */
 	hmot(HSPACE0);						/* skip right for second cut marks */
 	t_text(cut_marks);					/* print second set */
-	
+
 	hpos = vpos = 0;					/* reset these guys again */
 	cur_vpos = max_vpos = 0;			/* user doesn't own the banner */
 	print_banner = NO;					/* don't print it again */
@@ -1482,7 +1484,7 @@ t_newline (void)
 /*****************************************************************************/
 
 
-int 
+int
 t_size (
     int n							/* convert this point size */
 )
@@ -1574,7 +1576,7 @@ t_charht (
 /*****************************************************************************/
 
 
-int 
+int
 upper_limit (
     int n							/* find upper limit for this range */
 )
@@ -1668,7 +1670,7 @@ t_slant (
 /*****************************************************************************/
 
 
-int 
+int
 t_font (
     char *str						/* convert this string to font number */
 )
@@ -1752,7 +1754,7 @@ t_text (
 							buf[0] = *str++;
 							buf[1] = *str++;
 							buf[2] = '\0';
-							put1s(buf);	
+							put1s(buf);
 							break;
 
 				case '\\':				/* backslash character */
@@ -1825,7 +1827,7 @@ t_reset (
 
 	PUTC(STRTPG, tf);					/* MACRO - output STRTPG opcode */
 	putint(9000+pageno);				/* can't possibly be a page number */
-	
+
 	for ( n = 0; n < 10; n++ )			/* flush out APS internal buffer */
 		PUTC(APSNOOP, tf);				/* MACRO - put out a few no-op's */
 
@@ -2074,7 +2076,7 @@ put1s (
 	for ( i = 0; i < nchtab; i++ )		/* lookup the special character */
 		if ( strcmp(&chname[chtab[i]], s) == SAME_STR )
 			break;
-	
+
 	if ( i < nchtab )  {				/* found it */
 #ifdef ADJUST
 		t_adjust(s);					/* adjust vertical positions */
@@ -2220,7 +2222,7 @@ put1 (
 
 
 	if ( j > nfonts || i == 0 || (code = codetab[k][i] & BMASK) == 0 )  {
-		if ( i == 0  ||  j > nfonts )	
+		if ( i == 0  ||  j > nfonts )
 			if ( c+32 < 128 || newfile(&chname[chtab[c+32-128]], pstab[size-1]) )
 				error(FATAL, "character 0%o not found", c+32);
 		return;
@@ -2285,8 +2287,8 @@ putint (
 
 
 
-	PUTC(n >> 8, tf);					
-	PUTC(n, tf);						
+	PUTC(n >> 8, tf);
+	PUTC(n, tf);
 
 }	/* End of putint */
 
@@ -2556,7 +2558,7 @@ account (void)
 /*****************************************************************************/
 
 
-int 
+int
 special_case (
     int index,						/* char position in tables */
     int font						/* char info is on this font */
@@ -2645,7 +2647,7 @@ special_case (
 	if ( code & FONT_BIT )				/* alternate font specified */
 		req_font = alt_font[index];		/* APS-5 alternate font number */
 
-	if ( (old_range != range) || (req_font != old_font) )  {	
+	if ( (old_range != range) || (req_font != old_font) )  {
 
 		aps_font = req_font;
 		PUTC(FONT, tf);					/* set new font */
@@ -2667,7 +2669,7 @@ special_case (
 /*****************************************************************************/
 
 
-int 
+int
 get_range (
     int n							/* find the range for this point size */
 )
@@ -2854,7 +2856,7 @@ fontprint (
 	fprintf(fp_debug, "  CHAR     WIDTH      CODE     INDEX\n");
 	count = 0;
 
-	for (j = 0; j < dev.nchtab + 128 - 32; j++)  {	 
+	for (j = 0; j < dev.nchtab + 128 - 32; j++)  {
 
 		if ( (pos = fitab[i][j] & BMASK) != 0 )  {
 			count++;

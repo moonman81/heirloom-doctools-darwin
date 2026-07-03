@@ -53,7 +53,7 @@ static const char sccsid[] USED = "@(#)/usr/ucb/ta.sl	1.8 (gritter) 12/25/06";
  */
 
 /*
- *	drive hp2621 terminal 
+ *	drive hp2621 terminal
  *	just to see stuff quickly. like troff -a
  */
 
@@ -109,6 +109,7 @@ x ...\n	device control functions:
 #include	<stdarg.h>
 
 #include "dev.h"
+#include "heirloom_flags.h"
 #define	NFONT	10
 
 int	output	= 0;	/* do we do output at all? */
@@ -196,6 +197,7 @@ static int sget(char *, size_t, FILE *);
 int
 main(int argc, char **argv)
 {
+	heirloom_flags(argc, argv, "troff.d", 0);
 	char buf[BUFSIZ];
 
 	fp = stdin;

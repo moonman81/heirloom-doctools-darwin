@@ -39,6 +39,7 @@ static const char sccsid[] USED = "@(#)/usr/ucb/checknr.sl	1.3 (gritter) 11/6/05
 #include <unistd.h>
 #include <string.h>
 #include <ctype.h>
+#include "heirloom_flags.h"
 
 static	int	maxstk;	/* Stack size */
 #define	MAXBR	100	/* Max number of bracket pairs known */
@@ -193,6 +194,7 @@ growstk(void)
 int
 main(int argc, char **argv)
 {
+	heirloom_flags(argc, argv, "checknr", 0);
 	FILE *f;
 	int i;
 	char *cp, *cq, c;

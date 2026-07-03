@@ -27,6 +27,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include "heirloom_flags.h"
 
 static void map_lower(char *);
 static void instruct(void);
@@ -34,6 +35,7 @@ static void instruct(void);
 int
 main(int argc, char **argv)	/* look in biblio for record matching keywords */
 {
+	heirloom_flags(argc, argv, "lookbib", HF_VERBOSE_TAKEN);
 	FILE *hfp;
 	char s[BUFSIZ], hunt[BUFSIZ];
 

@@ -76,6 +76,7 @@ static const char sccsid[] USED = "@(#)/usr/ucb/ptx.sl	1.5 (gritter) 11/6/05";
 #include <unistd.h>
 #include <locale.h>
 #include <limits.h>
+#include "heirloom_flags.h"
 #define DEFLTX LIBDIR "/eign"
 #define TILDE 0177
 #define SORT "sort"
@@ -230,6 +231,7 @@ PUTC(int c, FILE *fp)
 int
 main(int argc,char **argv)
 {
+	heirloom_flags(argc, argv, "ptx", 0);
 	char template[] = "/tmp/ptxsXXXXXX";
 	register int c;
 	register wchar_t *bufp;
@@ -285,7 +287,7 @@ main(int argc,char **argv)
 			break;
 
 		case 'i':
-			if(only) 
+			if(only)
 				diag("Only file already given.",empty);
 			if (argc>=2){
 				argc--;

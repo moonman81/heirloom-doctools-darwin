@@ -584,9 +584,14 @@ static void conv(FILE *fp)
 	checkout();		// check that everything was printed
 }
 
+extern "C" {
+#include "heirloom_flags.h"
+}
+
 int
 main(int argc, char **argv)
 {
+	heirloom_flags(argc, argv, "mpm", HF_VERBOSE_TAKEN);
 	static FILE *fp = stdin;
 	setlocale(LC_CTYPE, "");
 	progname = argv[0];

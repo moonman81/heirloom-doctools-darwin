@@ -29,6 +29,7 @@
 # include <unistd.h>
 # include <string.h>
 # include "refer..c"
+#include "heirloom_flags.h"
 extern char refdir[];
 extern int keepold;
 extern char *fgnames[];
@@ -52,6 +53,7 @@ long indexdate =0;
 int
 main(int argc,char **argv)
 {
+	heirloom_flags(argc, argv, "hunt1", 0);
 	/* read query from stdin, expect name of indexes in argv[1] */
 	static FILE *fa, *fb, *fc;
 	char nma[100], nmb[100], nmc[100], *qitem[100], *rprog = NULL;
@@ -72,10 +74,10 @@ main(int argc,char **argv)
 		switch(argv[1][1])
 		{
 		case 'a': /* all output, incl. false drops */
-			falseflg = 1; 
+			falseflg = 1;
 			break;
 		case 'r':
-			argc--; 
+			argc--;
 			argv++;
 			rprog = argv[1];
 			break;
@@ -86,29 +88,29 @@ main(int argc,char **argv)
 			tags = setfrom(argv[1][2]);
 			break;
 		case 'i': /* input in argument string */
-			argc--; 
+			argc--;
 			argv++;
 			sinput = argv[1];
 			break;
 		case 's': /*text output to string */
 		case 'o':
-			argc--; 
+			argc--;
 			argv++;
 			soutput = argv[1];
 			if ((intptr_t) argv[2]<16000)
 			{
 				soutlen = (intptr_t)argv[2];
-				argc--; 
+				argc--;
 				argv++;
 			}
 			break;
 		case 't': /*tag output to string */
-			argc--; 
+			argc--;
 			argv++;
 			tagout = argv[1];
 			break;
 		case 'l': /* length of internal lists */
-			argc--; 
+			argc--;
 			argv++;
 			lmaster = atoi(argv[1]);
 			break;
@@ -122,13 +124,13 @@ main(int argc,char **argv)
 # endif
 			break;
 		case 'P': /* print term freqs */
-			prfreqs=1; 
+			prfreqs=1;
 			break;
 		case 'm':
-			measure=1; 
+			measure=1;
 			break;
 		}
-		argc--; 
+		argc--;
 		argv++;
 	}
 	if(argc < 2)
@@ -137,8 +139,8 @@ main(int argc,char **argv)
 	if (was == 0 || strcmp (oldname, nma) !=0)
 	{
 		strcpy (oldname,nma);
-		strcpy (nmb, nma); 
-		strcpy (nmc, nmb); 
+		strcpy (nmb, nma);
+		strcpy (nmc, nmb);
 		strcpy(nmd,nma);
 		strcat (nma, ".ia");
 		strcat (nmb, ".ib");
@@ -146,8 +148,8 @@ main(int argc,char **argv)
 		strcat (nmd, ".id");
 		if (was)
 		{
-			fclose(fa); 
-			fclose(fb); 
+			fclose(fa);
+			fclose(fb);
 			fclose(fc);
 		}
 
@@ -250,15 +252,15 @@ search:
 					tagp = tagout;
 					while (*tagp) {
 						oldtagp = tagp;
-						while (*tagp && (*tagp != '\n')) 
+						while (*tagp && (*tagp != '\n'))
 							tagp++;
-						if (*tagp) 
+						if (*tagp)
 							tagp++;
 				                nout = findline(oldtagp, &bout, 1000, 0L);
 						if (nout > 0)
 						{
 							fputs(bout, stdout);
-							free(bout); 
+							free(bout);
 						}
 					}
 				}
@@ -291,21 +293,21 @@ setfrom(int c)
 {
 	switch(c)
 	{
-	case 'y': 
+	case 'y':
 	case '\0':
 	default:
 		return(1000);
 	case '1':
-	case '2': 
-	case '3': 
-	case '4': 
+	case '2':
+	case '3':
+	case '4':
 	case '5':
-	case '6': 
-	case '7': 
-	case '8': 
+	case '6':
+	case '7':
+	case '8':
 	case '9':
 		return(c-'0');
-	case 'n': 
+	case 'n':
 	case '0':
 		return(0);
 	}

@@ -16,6 +16,7 @@
 #include	<string.h>
 #include	"pic.h"
 #include	"y.tab.h"
+#include "heirloom_flags.h"
 
 extern const char	version[];
 
@@ -63,6 +64,7 @@ int	getpid(void);
 int
 main(int argc, char *argv[])
 {
+	heirloom_flags(argc, argv, "pic", HF_VERBOSE_TAKEN);
 	char buf[20];
 
 	signal(SIGFPE, fpecatch);

@@ -31,10 +31,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include "refer..c"
+#include "heirloom_flags.h"
 
 int
 main(int argc, char **argv)
 {
+	heirloom_flags(argc, argv, "refer", HF_VERBOSE_TAKEN);
 	/* Make inverted file indexes.  Reads a stream from mkey which
 	 * gives record pointer items and keys.  Generates set of files
 	 *	a. NHASH pointers to file b.
@@ -65,22 +67,22 @@ main(int argc, char **argv)
 		switch(argv[1][1])
 		{
 		case 'h': /* size of hash table */
-			nhash = atoi (argv[1]+2); 
+			nhash = atoi (argv[1]+2);
 			break;
 		case 'n': /* new, don't append */
-			appflg=0; 
+			appflg=0;
 			break;
 		case 'a': /* append to old file */
-			appflg=1; 
+			appflg=1;
 			break;
 		case 'v': /* verbose output */
-			chatty=1; 
+			chatty=1;
 			break;
 		case 'd': /* keep keys on file .id for check on searching */
-			keepkey=1; 
+			keepkey=1;
 			break;
 		case 'p': /* pipe into sort (saves space, costs time)*/
-			pipein = 1; 
+			pipein = 1;
 			break;
 		case 'i': /* input is on file, not stdin */
 			close(0);
@@ -88,7 +90,7 @@ main(int argc, char **argv)
 				err("Can't read input %s", argv[2]);
 			if (argv[1][2]=='u') /* unlink */
 				remove = argv[2];
-			argc--; 
+			argc--;
 			argv++;
 			break;
 		}

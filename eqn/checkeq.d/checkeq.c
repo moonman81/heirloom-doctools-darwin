@@ -29,6 +29,7 @@ static const char sccsid[] USED = "@(#)/usr/ucb/checkeq.sl	4.1 (gritter) 9/15/05
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "heirloom_flags.h"
 
 static void check(FILE *);
 static char *fgetline(char **, size_t *, FILE *);
@@ -39,6 +40,7 @@ static	int	delim	= '$';
 int
 main(int argc, char **argv)
 {
+	heirloom_flags(argc, argv, "checkeq.d", 0);
 	if (argc <= 1)
 		check(stdin);
 	else

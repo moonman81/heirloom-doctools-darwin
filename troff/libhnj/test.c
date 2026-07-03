@@ -1,10 +1,12 @@
 #include "hyphen.h"
 #include <stdio.h>
 #include <string.h>
+#include "heirloom_flags.h"
 
 int
 main(int argc, char **argv)
 {
+	heirloom_flags(argc, argv, "libhnj", 0);
 	HyphenDict	*hd;
 	char	buf[512], hbuf[512];
 	int	i, j;
