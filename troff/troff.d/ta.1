@@ -1,0 +1,22 @@
+.TH TA 1 "2026-07-03" "Heirloom Darwin port" "Document Processing Tools"
+.SH NAME
+ta \- convert Adobe font metrics to the troff font-table format
+.SH SYNOPSIS
+.B ta
+.I "AFM-file"
+.SH DESCRIPTION
+.B ta
+reads an Adobe Font Metrics (AFM) file and writes the
+device-independent troff font-description table on standard
+output. The output is suitable for use by
+.BR troff (1)
+and by
+.BR dpost (1)
+when installing new PostScript fonts.
+.SH HEIRLOOM DARWIN PORT
+Supports the shared modality flags. See
+.BR heirloom-modality (7).
+.SH SEE ALSO
+.BR troff (1),
+.BR dpost (1),
+.BR afmtodit (1).

@@ -1,0 +1,25 @@
+.TH DAPS 1 "2026-07-03" "Heirloom Darwin port" "Document Processing Tools"
+.SH NAME
+daps \- Autologic APS-5 phototypesetter troff back-end
+.SH SYNOPSIS
+.B daps
+.RI "[\-t] [\-D" dir "] [" file " ...]"
+.SH DESCRIPTION
+.B daps
+is the troff back-end for the historical Autologic APS-5
+phototypesetter. It reads device-independent
+.BR troff (1)
+output (the ditroff intermediate representation) and produces
+APS-5 job code.
+.PP
+The port ships
+.B daps
+for completeness but few users will exercise it; it is retained
+because Ritter's original toolset drives real APS-5 hardware
+in some museums and archives.
+.SH HEIRLOOM DARWIN PORT
+Supports the shared modality flags. See
+.BR heirloom-modality (7).
+.SH SEE ALSO
+.BR troff (1),
+.BR dpost (1).
